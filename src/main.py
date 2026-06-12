@@ -14,9 +14,23 @@ def main():
             break
 
         retrieved_chunks = retrieve_relevant_chunks(question)
-        answer = generate_answer(question, retrieved_chunks)
 
-        print("\n===== ANSWER =====\n")
+        print("\n===== RETRIEVED CHUNKS =====")
+        for chunk in retrieved_chunks:
+            print(f"ID: {chunk['id']}")
+            print(f"Source: {chunk['source']}")
+            print(f"Chunk Index: {chunk['chunk_index']}")
+            print(f"Distance: {chunk['distance']}")
+            print()
+
+        chunk_texts = []
+
+        for chunk in retrieved_chunks:
+            chunk_texts.append(chunk["text"])
+
+        answer = generate_answer(question, chunk_texts)
+
+        print("\n===== ANSWER =====")
         print(answer)
         print()
 

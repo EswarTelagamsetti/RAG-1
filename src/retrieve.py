@@ -18,4 +18,20 @@ def retrieve_relevant_chunks(question, n_results=2):
         n_results=n_results
     )
 
-    return results["documents"][0]
+    retrieved_chunks = []
+
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
+    distances = results["distances"][0]
+    ids = results["ids"][0]
+
+    for i in range(len(documents)):
+        retrieved_chunks.append({
+            "id": ids[i],
+            "text": documents[i],
+            "source": metadatas[i]["source"],
+            "chunk_index": metadatas[i]["chunk_index"],
+            "distance": distances[i]
+        })
+
+    return retrieved_chunks
