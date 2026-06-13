@@ -32,6 +32,10 @@ def main():
 
         print("\n===== ANSWER =====")
         print(answer)
+
+        print("\n===== SOURCES =====")
+        for chunk in retrieved_chunks:
+            print(f"{chunk['source']} (chunk {chunk['chunk_index']})")
         print()
 
 

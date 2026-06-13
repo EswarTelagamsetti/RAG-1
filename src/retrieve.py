@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-def retrieve_relevant_chunks(question, n_results=2):
+def retrieve_relevant_chunks(question, n_results=4):
     question_embedding = model.encode(question)
 
     client = chromadb.PersistentClient(path="chroma_db")
