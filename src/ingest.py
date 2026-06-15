@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 import chromadb
+import os
 
 
 def extract_text_from_pdf(pdf_path):
@@ -51,11 +52,14 @@ def ingest_pdf(pdf_path):
     client = chromadb.PersistentClient(path="chroma_db")
     collection = client.get_or_create_collection(name="pdf_chunks")
 
+    document_name = os.path.basename(pdf_path)
+    document_name = document_name.replace(".pdf", "")
+
     ids = []
     metadatas = []
 
     for index in range(len(chunks)):
-        ids.append(f"chunk_{index}")
+        ids.append(f"{document_name}_chunk_{index}")
         metadatas.append({
             "source": pdf_path,
             "chunk_index": index
@@ -72,4 +76,17 @@ def ingest_pdf(pdf_path):
 
 
 if __name__ == "__main__":
-    ingest_pdf("data/pdfs/sample.pdf")
+
+    pdf_folder = "data/pdfs"
+
+    files = os.listdir(pdf_folder)
+
+    for file in files:
+
+        if file.endswith(".pdf"):
+
+            pdf_path = os.path.join(pdf_folder, file)
+
+            print(f"\nProcessing: {file}")
+
+            ingest_pdf(pdf_path)
