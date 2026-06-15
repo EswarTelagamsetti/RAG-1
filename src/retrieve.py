@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-def retrieve_relevant_chunks(question, n_results=4):
+def retrieve_relevant_chunks(question, document_name=None, n_results=4):
     question_embedding = model.encode(question)
 
     client = chromadb.PersistentClient(path="chroma_db")
@@ -12,11 +12,18 @@ def retrieve_relevant_chunks(question, n_results=4):
     collection = client.get_or_create_collection(
         name="pdf_chunks"
     )
-
-    results = collection.query(
-        query_embeddings=[question_embedding.tolist()],
-        n_results=n_results
-    )
+    
+    query_params = {
+    "query_embeddings": [question_embedding.tolist()],
+    "n_results": n_results
+    }
+    if document_name:
+        query_params["where"] = {
+            "source": {
+                "$eq": document_name
+        }
+    }
+    results = collection.query(**query_params)
 
     retrieved_chunks = []
 
