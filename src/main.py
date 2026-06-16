@@ -2,12 +2,10 @@ from retrieve import retrieve_relevant_chunks
 from chatbot import generate_answer
 import os
 
+
 def main():
     print("RAG Chatbot Started")
     print("Type 'exit' to stop\n")
-
-    print("Select document:")
-    
 
     pdf_files = []
 
@@ -15,11 +13,11 @@ def main():
         if file.endswith(".pdf"):
             pdf_files.append(file)
 
-    print("\nSelect document:")
+    print("Select document:")
     print("1. all")
 
     for i in range(len(pdf_files)):
-        print(f"{i+2}. {pdf_files[i].replace('.pdf','')}")
+        print(f"{i + 2}. {pdf_files[i].replace('.pdf', '')}")
 
     choice = input("Enter choice: ")
 
@@ -28,13 +26,17 @@ def main():
     if choice == "1":
         document_name = None
         print("\nSelected document: all")
-
     else:
         index = int(choice) - 2
 
-    if 0 <= index < len(pdf_files):
-        document_name = f"data/pdfs\\{pdf_files[index]}"
-        print(f"\nSelected document: {document_name}")
+        if 0 <= index < len(pdf_files):
+            document_name = f"data/pdfs\\{pdf_files[index]}"
+            print(f"\nSelected document: {document_name}")
+        else:
+            print("Invalid choice. Using all documents.")
+            document_name = None
+
+    chat_history = []
 
     while True:
         question = input("Ask question: ")
@@ -55,14 +57,18 @@ def main():
             print(f"Chunk Index: {chunk['chunk_index']}")
             print(f"Distance: {chunk['distance']}")
             print()
-        
 
         chunk_texts = []
 
         for chunk in retrieved_chunks:
             chunk_texts.append(chunk["text"])
 
-        answer = generate_answer(question, chunk_texts)
+        answer = generate_answer(question, chunk_texts, chat_history)
+
+        chat_history.append({
+            "question": question,
+            "answer": answer
+        })
 
         print("\n===== ANSWER =====")
         print(answer)
