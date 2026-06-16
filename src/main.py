@@ -1,29 +1,40 @@
 from retrieve import retrieve_relevant_chunks
 from chatbot import generate_answer
-
+import os
 
 def main():
     print("RAG Chatbot Started")
     print("Type 'exit' to stop\n")
 
     print("Select document:")
+    
+
+    pdf_files = []
+
+    for file in os.listdir("data/pdfs"):
+        if file.endswith(".pdf"):
+            pdf_files.append(file)
+
+    print("\nSelect document:")
     print("1. all")
-    print("2. dsa")
-    print("3. os")
-    print("4. sql")
+
+    for i in range(len(pdf_files)):
+        print(f"{i+2}. {pdf_files[i].replace('.pdf','')}")
 
     choice = input("Enter choice: ")
 
     document_name = None
 
-    if choice == "2":
-        document_name = "data/pdfs\\dsa.pdf"
-    elif choice == "3":
-        document_name = "data/pdfs\\os.pdf"
-    elif choice == "4":
-        document_name = "data/pdfs\\sql.pdf"
+    if choice == "1":
+        document_name = None
+        print("\nSelected document: all")
 
-    print(f"\nSelected document: {document_name if document_name else 'all'}\n")
+    else:
+        index = int(choice) - 2
+
+    if 0 <= index < len(pdf_files):
+        document_name = f"data/pdfs\\{pdf_files[index]}"
+        print(f"\nSelected document: {document_name}")
 
     while True:
         question = input("Ask question: ")
