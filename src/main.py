@@ -1,7 +1,7 @@
 from retrieve import retrieve_relevant_chunks
 from chatbot import generate_answer
 import os
-
+from question_rewriter import rewrite_question
 
 def main():
     print("RAG Chatbot Started")
@@ -44,14 +44,7 @@ def main():
         if question.lower() == "exit":
             print("Chatbot stopped")
             break
-        if len(chat_history) > 0:
-            enhanced_question = (
-                chat_history[-1]["question"]
-                + " "
-                + question
-            )
-        else:
-            enhanced_question = question
+        enhanced_question = rewrite_question(question, chat_history)
 
         retrieved_chunks = retrieve_relevant_chunks(
             enhanced_question,
