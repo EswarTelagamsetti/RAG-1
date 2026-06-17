@@ -45,6 +45,7 @@ def main():
             print("Chatbot stopped")
             break
         enhanced_question = rewrite_question(question, chat_history)
+        print(f"\nRewritten Question: {enhanced_question}")
 
         retrieved_chunks = retrieve_relevant_chunks(
             enhanced_question,
