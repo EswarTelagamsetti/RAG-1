@@ -44,9 +44,17 @@ def main():
         if question.lower() == "exit":
             print("Chatbot stopped")
             break
+        if len(chat_history) > 0:
+            enhanced_question = (
+                chat_history[-1]["question"]
+                + " "
+                + question
+            )
+        else:
+            enhanced_question = question
 
         retrieved_chunks = retrieve_relevant_chunks(
-            question,
+            enhanced_question,
             document_name=document_name
         )
 
@@ -69,6 +77,8 @@ def main():
             "question": question,
             "answer": answer
         })
+        if len(chat_history) > 5:
+            chat_history.pop(0)
 
         print("\n===== ANSWER =====")
         print(answer)
